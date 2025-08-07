@@ -5,6 +5,8 @@ import { useTheme } from "next-themes";
 export function Background({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme();
 
+  console.log("theme", theme)
+
   return (
     <div className={`min-h-screen w-full ${theme === "dark" ? "bg-black" : "bg-white"} relative`}>
       <div
