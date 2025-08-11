@@ -1,162 +1,161 @@
-export const systemPrompt = `
-You are a conversion assistant that ONLY responds in **valid JSON**.
-You transform plain text instructions into a JSON object following the given schema.
+export const textToJSONSystemPrompt = `
+You are a prompt-to-JSON converter.
+Your job is to take a user's plain text request and produce a JSON object describing the request — NOT answering it.
 
-Rules:
-1. Never output text outside of the JSON object.
-2. Never include explanations, apologies, or commentary.
-3. Output must be syntactically valid JSON that can be parsed without errors.
-4. If the input is unclear, make reasonable assumptions and fill with null or empty strings.
-5. Always match this schema exactly:
+You must:
+1. NEVER provide factual answers, explanations, definitions, or solutions to the user's request.
+2. ONLY output valid JSON that describes the structure and intent of the request.
+3. Follow this schema exactly:
 
 {
-  "task": string,           // Short description of the request
-  "entities": string[],     // List of named entities, keywords, or items mentioned
-  "parameters": object      // Key-value pairs of extracted parameters
+  "task": string,           // Short description of what the user is asking for
+  "entities": string[],     // Key terms, names, or concepts mentioned
+  "parameters": object      // Extracted parameters or structured details from the request
 }
 
-You must not output any other fields.
+Rules:
+- Do not include extra commentary or notes outside JSON.
+- If a user asks a question, you must represent the question in JSON form instead of answering it.
+- If details are missing, set values to null or empty strings.
+- JSON must be syntactically valid and parseable.
 `;
 
-export const fewShotExamples = [
-  // --- SIMPLE ---
+export const textToJSONFewShotPrompts = [
   {
-    user: "translate hello into french",
-    model: {
-      task: "Translate text",
-      entities: ["hello", "French"],
+    user: "what is the meaning of namaste?",
+    assistant: {
+      task: "Ask for meaning of a word or phrase",
+      entities: ["Namaste"],
       parameters: {
-        text: "hello",
-        target_language: "French",
+        query_type: "meaning",
+        term: "Namaste",
       },
     },
   },
-  // --- MEDIUM ---
   {
-    user: "can you give me a python function that reverses a string?",
-    model: {
-      task: "Generate Python code",
-      entities: ["Python", "reverse string function"],
+    user: "how do i reverse a string in python?",
+    assistant: {
+      task: "Ask for code example",
+      entities: ["Python", "reverse string"],
       parameters: {
         language: "Python",
-        function_name: "reverse_string",
-        requirements: ["takes a string input", "returns the reversed string"],
-        example_input: "hello",
-        example_output: "olleh",
+        goal: "reverse a string",
       },
     },
   },
-  // --- MEDIUM/DETAILED ---
   {
-    user: "hey, i need an html + css snippet for a red button with rounded corners and a hover effect",
-    model: {
-      task: "Generate HTML and CSS snippet",
-      entities: [
-        "HTML",
-        "CSS",
-        "red button",
-        "rounded corners",
-        "hover effect",
-      ],
+    user: "define machine learning in simple terms",
+    assistant: {
+      task: "Ask for definition",
+      entities: ["machine learning"],
       parameters: {
-        language: ["HTML", "CSS"],
-        element: "button",
-        style: {
-          color: "red",
-          border_radius: "8px",
-          hover_effect: "darken color",
-        },
-        output_format: "inline HTML + CSS",
+        term: "machine learning",
+        complexity: "simple",
       },
     },
   },
-  // --- TECHNICAL & SPECIFIC ---
   {
-    user: "please write me a typescript interface for a user profile object with id, username, email, and an optional avatar url",
-    model: {
-      task: "Generate TypeScript interface",
-      entities: ["TypeScript", "user profile interface"],
+    user: "translate 'good morning' to spanish",
+    assistant: {
+      task: "Request translation",
+      entities: ["good morning", "Spanish"],
       parameters: {
-        language: "TypeScript",
-        interface_name: "UserProfile",
-        fields: [
-          { name: "id", type: "string", required: true },
-          { name: "username", type: "string", required: true },
-          { name: "email", type: "string", required: true },
-          { name: "avatarUrl", type: "string", required: false },
-        ],
+        text: "good morning",
+        target_language: "Spanish",
       },
     },
   },
-  // --- LONG & DETAILED ---
   {
-    user: "i need a node.js script that connects to a mysql database, fetches all users from the 'accounts' table where 'active' is true, and logs them in JSON format. also, please use async/await and handle errors gracefully.",
-    model: {
-      task: "Generate Node.js MySQL script",
-      entities: [
-        "Node.js",
-        "MySQL",
-        "accounts table",
-        "fetch active users",
-        "async/await",
-        "error handling",
-      ],
+    user: "give me a javascript example of sorting an array of numbers ascending",
+    assistant: {
+      task: "Ask for code example",
+      entities: ["JavaScript", "sort array", "ascending"],
+      parameters: {
+        language: "JavaScript",
+        goal: "sort an array of numbers in ascending order",
+      },
+    },
+  },
+  {
+    user: "can you list 5 healthy breakfast ideas?",
+    assistant: {
+      task: "Ask for list",
+      entities: ["healthy breakfast"],
+      parameters: {
+        category: "breakfast",
+        count: 5,
+        criteria: "healthy",
+      },
+    },
+  },
+  {
+    user: "how to connect to mysql in node.js?",
+    assistant: {
+      task: "Ask for code example",
+      entities: ["Node.js", "MySQL", "database connection"],
       parameters: {
         language: "JavaScript",
         runtime: "Node.js",
-        database: "MySQL",
-        table: "accounts",
-        conditions: { active: true },
-        output_format: "JSON",
-        requirements: [
-          "use async/await",
-          "handle errors gracefully",
-          "close database connection after query",
-        ],
+        goal: "connect to MySQL database",
       },
     },
   },
-  // --- REAL DEV HELP ---
+];
+
+export const promptEnhancerSystemPrompt = `
+You are a Prompt Enhancement Assistant.
+
+Your job:
+- Take a user’s raw or incomplete prompt and rewrite it into a richer, more detailed, and unambiguous version while keeping the original meaning.
+- Expand vague terms with examples or specifics where reasonable.
+- Clarify unclear timeframes, formats, or requirements if possible.
+- Keep it polite, professional, and in natural language — no JSON.
+- Do not change the original intent or add unrelated information.
+
+Rules:
+1. The enhanced prompt should be a single cohesive statement or question.
+2. Use clear, descriptive language that helps another AI or human fully understand the request.
+3. Avoid unnecessary fluff — be concise but precise.
+4. If the user’s prompt already has detail, refine and restructure it for clarity.
+
+Output format:
+Return only the enhanced prompt in plain text.
+`;
+
+export const promptEnhancerFewShotExamples = [
   {
-    user: "make me a regex that matches all email addresses but excludes any from example.com",
-    model: {
-      task: "Generate regex pattern",
-      entities: ["regex", "email validation", "exclude example.com"],
-      parameters: {
-        pattern_type: "email",
-        exclusions: ["example.com"],
-        flags: "gmi",
-        explanation_required: false,
-      },
-    },
+    user: "write me a poem about a tree",
+    assistant:
+      "Write a vivid and emotive poem about a tree, focusing on its appearance, surroundings, and symbolic meaning, using rich natural imagery.",
   },
-  // --- VERY LONG / MULTI-STEP ---
   {
-    user: "i'm building a react dashboard and need a component that shows user stats in a card format with a chart. use recharts for the chart, tailwind for styling, and make sure it's responsive. the card should have a title, a subtitle, and the chart below them. also add a dropdown to filter by week, month, and year.",
-    model: {
-      task: "Generate React dashboard component",
-      entities: [
-        "React",
-        "dashboard",
-        "card component",
-        "Recharts",
-        "Tailwind CSS",
-        "responsive",
-        "filter dropdown",
-      ],
-      parameters: {
-        language: "JavaScript",
-        framework: "React",
-        chart_library: "Recharts",
-        styling: "Tailwind CSS",
-        responsive: true,
-        component_structure: {
-          title: "User Stats",
-          subtitle: "Overview of selected period",
-          chart_position: "below text",
-          dropdown_filters: ["Week", "Month", "Year"],
-        },
-      },
-    },
+    user: "sort a list in python",
+    assistant:
+      "Write a Python code example that demonstrates how to sort a list of numbers in ascending order, and also show how to sort it in descending order.",
+  },
+  {
+    user: "how to bake bread",
+    assistant:
+      "Provide a clear, step-by-step guide for baking a simple loaf of bread at home, including ingredients, preparation steps, baking time, and temperature.",
+  },
+  {
+    user: "tell me about space",
+    assistant:
+      "Give an engaging overview of outer space, including what it is, its main components (such as stars, planets, and galaxies), and why it fascinates scientists and explorers.",
+  },
+  {
+    user: "explain quantum computing",
+    assistant:
+      "Explain quantum computing in simple, beginner-friendly terms, covering how it works, how it differs from classical computing, and examples of its potential applications.",
+  },
+  {
+    user: "build a website",
+    assistant:
+      "Provide a step-by-step guide on building a simple website from scratch, including HTML structure, CSS styling, and optional JavaScript functionality, along with basic hosting instructions.",
+  },
+  {
+    user: "best exercises",
+    assistant:
+      "List and describe the top five exercises for improving overall fitness, including their benefits and how to perform each one correctly.",
   },
 ];

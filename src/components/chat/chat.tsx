@@ -5,7 +5,6 @@ import {
     PromptInputSubmit,
     PromptInputTextarea,
     PromptInputToolbar,
-    PromptInputButton,
     PromptInputTools,
     PromptInputModelSelect,
     PromptInputModelSelectValue,
@@ -16,25 +15,44 @@ import {
 import { useState } from 'react';
 import { models } from '@/lib/models';
 import { formats } from '@/lib/formats';
+import { useGroq } from '@/hooks/use-groq';
+import { useToken } from '@/hooks/use-token';
+import { GroqRequest } from '@/types/api.types';
 
 
-export default function ChatBox({ token }: { token: string | undefined }) {
+export default function ChatBox() {
     const [text, setText] = useState<string>('');
     const [model, setModel] = useState<string>(models[0].id);
-    const [format, setFormat] = useState<number>(formats[0].id)
+    const [format, setFormat] = useState<string>(formats[0].id)
+
+    const { isLoading: tokenLoading, error: tokenError } = useToken();
+
+    const { trigger, data, error, isLoading } = useGroq();
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        sendMessage({ text })
-        setText('');
+        try {
+            const requestBody: GroqRequest = {
+                message: text,
+                model,
+                format
+            };
+            trigger(requestBody);
+        } catch (error) {
+            console.error("Error triggering GROQ request:", error);
+        }
     };
 
-    function sendMessage({ text }: { text: string }) {
-        console.log("text", text)
-    }
-
     return (
-        <main className='flex justify-center items-center w-full'>
+        <main className='flex flex-col h-full w-full'>
+            {error && (<div className="text-red-500">{error.message}</div>)}
+            <div className="mt-4">
+                {data && (
+                    <p className="text-green-500">
+                        {data.message}
+                    </p>
+                )}
+            </div>
             <PromptInput onSubmit={handleSubmit} className="mt-4">
                 <PromptInputTextarea
                     onChange={(e) => setText(e.target.value)}
@@ -64,9 +82,9 @@ export default function ChatBox({ token }: { token: string | undefined }) {
                         {/* Format Select */}
                         <PromptInputModelSelect
                             onValueChange={(value) => {
-                                setFormat(Number(value));
+                                setFormat(value);
                             }}
-                            value={format.toString()}
+                            value={format}
                         >
                             <PromptInputModelSelectTrigger>
                                 <PromptInputModelSelectValue />
@@ -81,7 +99,7 @@ export default function ChatBox({ token }: { token: string | undefined }) {
                         </PromptInputModelSelect>
                     </PromptInputTools>
                     {/* Status can be ready, submitted, streaming or error */}
-                    <PromptInputSubmit disabled={!text} status={'ready'} />
+                    <PromptInputSubmit className='flex items-center justify-center' disabled={!text || isLoading} status={isLoading ? 'submitted' : error ? 'error' : 'ready'} />
                 </PromptInputToolbar>
             </PromptInput>
         </main>
