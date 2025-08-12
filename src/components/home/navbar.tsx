@@ -19,8 +19,8 @@ import { ThemeToggleButton } from "../ui/theme-toggle-button"
 
 const navigationLinks = [
     { href: "/", label: "Home" },
-    { href: "/text-to-json", label: "Text to JSON" },
-    { href: "/enhance", label: "Enhance" },
+    { href: "/chat?format=text-to-json", label: "Text to JSON" },
+    { href: "/chat?format=enhance-prompt", label: "Enhance" },
     { href: "/about", label: "About" },
 ]
 

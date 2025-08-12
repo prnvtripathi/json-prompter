@@ -13,6 +13,7 @@ import {
     PromptInputModelSelectItem
 } from '@/components/chat/prompt-input';
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { models } from '@/lib/models';
 import { formats } from '@/lib/formats';
 import { useGroq } from '@/hooks/use-groq';
@@ -21,9 +22,12 @@ import { GroqRequest } from '@/types/api.types';
 
 
 export default function ChatBox() {
+    const searchParams = useSearchParams();
+    const formatFromParams = searchParams.get("format") || formats[0].id;
+
     const [text, setText] = useState<string>('');
     const [model, setModel] = useState<string>(models[0].id);
-    const [format, setFormat] = useState<string>(formats[0].id)
+    const [format, setFormat] = useState<string>(formatFromParams);
 
     const { isLoading: tokenLoading, error: tokenError } = useToken();
 
