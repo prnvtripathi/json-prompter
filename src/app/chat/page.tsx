@@ -1,4 +1,4 @@
-import ChatBox from "@/components/chat/chat";
+import { default as ChatBox } from "@/components/chat/chat";
 import Greeting from "@/components/ui/greeting";
 
 export default async function ChatPage() {
