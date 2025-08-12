@@ -42,6 +42,12 @@ export async function POST(req: NextRequest) {
       max_completion_tokens: 8192,
       top_p: 1,
       stream: false,
+      reasoning_effort:
+        model === "openai/gpt-oss-20b"
+          ? "low"
+          : model === "qwen/qwen3-32b"
+          ? "none"
+          : null,
       response_format:
         format === "text-to-json" ? { type: "json_object" } : null,
       stop: null,
@@ -51,6 +57,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       message: response,
+      format,
       success: true,
     });
   } catch (err: unknown) {

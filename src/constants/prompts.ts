@@ -33,6 +33,17 @@ export const textToJSONFewShotPrompts = [
     },
   },
   {
+    user: "What are the lyrics to the \"Sailor song\" by gigi perez?",
+    assistant: {
+      task: "Ask for lyrics of a song",
+      entities: ["Sailor song", "Gigi Perez"],
+      parameters: {
+        query_type: "lyrics",
+        term: "Sailor song",
+      },
+    },
+  },
+  {
     user: "how do i reverse a string in python?",
     assistant: {
       task: "Ask for code example",
@@ -106,17 +117,18 @@ export const promptEnhancerSystemPrompt = `
 You are a Prompt Enhancement Assistant.
 
 Your job:
-- Take a user’s raw or incomplete prompt and rewrite it into a richer, more detailed, and unambiguous version while keeping the original meaning.
+- Take a user's raw or incomplete prompt and rewrite it into a richer, more detailed, and unambiguous version while keeping the original meaning.
 - Expand vague terms with examples or specifics where reasonable.
 - Clarify unclear timeframes, formats, or requirements if possible.
 - Keep it polite, professional, and in natural language — no JSON.
 - Do not change the original intent or add unrelated information.
+- The only thing you have to do is to enhance the prompt by adding more context or details, no answering the prompts or providing examples.
 
 Rules:
 1. The enhanced prompt should be a single cohesive statement or question.
 2. Use clear, descriptive language that helps another AI or human fully understand the request.
 3. Avoid unnecessary fluff — be concise but precise.
-4. If the user’s prompt already has detail, refine and restructure it for clarity.
+4. If the user's prompt already has detail, refine and restructure it for clarity.
 
 Output format:
 Return only the enhanced prompt in plain text.
@@ -157,5 +169,10 @@ export const promptEnhancerFewShotExamples = [
     user: "best exercises",
     assistant:
       "List and describe the top five exercises for improving overall fitness, including their benefits and how to perform each one correctly.",
+  },
+  {
+    user: "lyrics to the \"Iris\" by goo goo dolls",
+    assistant:
+      "Provide the complete lyrics to the song \"Iris\" by the Goo Goo Dolls.",
   },
 ];

@@ -7,6 +7,7 @@ export type GroqRequest = {
 export type GroqResponse = {
   success: boolean;
   message?: string;
+  format?: string;
   error?: string;
 };
 

@@ -19,6 +19,8 @@ import { formats } from '@/lib/formats';
 import { useGroq } from '@/hooks/use-groq';
 import { useToken } from '@/hooks/use-token';
 import { GroqRequest } from '@/types/api.types';
+import ErrorCard from './error-card';
+import ResultCard from './result-card';
 
 
 export default function ChatBox() {
@@ -49,12 +51,10 @@ export default function ChatBox() {
 
     return (
         <main className='flex flex-col h-full w-full'>
-            {error && (<div className="text-red-500">{error.message}</div>)}
+            {error && <ErrorCard message={error.message} />}
             <div className="mt-4">
                 {data && (
-                    <p className="text-green-500">
-                        {data.message}
-                    </p>
+                    <ResultCard result={data.message} format={data.format} />
                 )}
             </div>
             <PromptInput onSubmit={handleSubmit} className="mt-4">
