@@ -21,7 +21,7 @@ const navigationLinks = [
     { href: "/", label: "Home" },
     { href: "/chat?format=text-to-json", label: "Text to JSON" },
     { href: "/chat?format=enhance-prompt", label: "Enhance" },
-    { href: "/about", label: "About" },
+    { href: "https://github.com/prnvtripathi", label: "About" },
 ]
 
 export default function Navbar() {
