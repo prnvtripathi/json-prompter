@@ -21,6 +21,7 @@ import { useToken } from '@/hooks/use-token';
 import { GroqRequest } from '@/types/api.types';
 import ErrorCard from './error-card';
 import ResultCard from './result-card';
+import PromptLibrary from './prompt-library';
 import { Loader } from 'lucide-react';
 
 // Loading component
@@ -88,6 +89,10 @@ function ChatBox() {
 
     const handleFormatChange = useCallback((value: string) => {
         setFormat(value);
+    }, []);
+
+    const handlePromptSelect = useCallback((prompt: string) => {
+        setText(prompt);
     }, []);
 
     const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
@@ -180,6 +185,11 @@ function ChatBox() {
                     />
                 </PromptInputToolbar>
             </PromptInput>
+
+            {/* Prompt Library */}
+            <div className="mt-8">
+                <PromptLibrary onPromptSelect={handlePromptSelect} />
+            </div>
         </main>
     );
 }

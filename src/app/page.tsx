@@ -5,7 +5,7 @@ import Navbar from "@/components/home/navbar";
 
 export default function Home() {
   return (
-    <main className="">
+    <main className="min-h-screen">
       <Navbar />
       <Background>
         <Hero />

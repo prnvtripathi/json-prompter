@@ -5,7 +5,7 @@ import MaskedDiv from "@/components/ui/masked-div"
 
 export default function Hero() {
     return (
-        <div className="w-full min-h-screen flex items-center justify-center py-20">
+        <div className="w-full min-h-screen flex items-center justify-center py-20 pt-24">
             <section className="mx-auto max-w-7xl px-4 md:px-8 lg:px-16">
                 <div className="space-y-8 grid grid-cols-1 md:grid-cols-2 items-center justify-items-center">
                     <div>

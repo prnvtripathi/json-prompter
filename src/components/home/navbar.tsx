@@ -28,7 +28,7 @@ export default function Navbar() {
     const pathname = usePathname()
 
     return (
-        <header className="px-4 md:px-12 bg-transparent md:max-w-5xl xl:max-w-7xl mx-auto w-full fixed top-0 left-0 right-0 z-50 backdrop-blur-sm">
+        <header className="px-4 md:px-12 bg-transparent md:max-w-5xl xl:max-w-7xl mx-auto w-full fixed top-0 left-0 right-0 z-50 backdrop-blur-sm border-b border-border/40">
             <div className="flex py-2 items-center justify-between gap-4">
                 {/* Left side - Logo */}
                 <div className="flex items-center">

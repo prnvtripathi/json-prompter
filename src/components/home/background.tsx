@@ -16,7 +16,7 @@ export function Background({ children }: { children: React.ReactNode }) {
     return (
       <>
         <div className="absolute inset-0 z-0" />
-        <div className="relative z-10">{children}</div>
+        <div className="relative z-10 min-h-full">{children}</div>
       </>
     )
   }
@@ -26,7 +26,7 @@ export function Background({ children }: { children: React.ReactNode }) {
 
   return (
     <div
-      className={`min-h-screen w-full ${resolvedTheme === "dark" ? "bg-black" : "bg-white"
+      className={`min-h-full w-full ${resolvedTheme === "dark" ? "bg-black" : "bg-white"
         } relative`}
     >
       <div
