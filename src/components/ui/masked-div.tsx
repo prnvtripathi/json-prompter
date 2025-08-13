@@ -125,11 +125,13 @@ const MaskedDiv: React.FC<MaskedDivProps> = ({
 
   return (
     <section className={`relative ${className}`} style={containerStyle}>
-      {React.cloneElement(children, {
-        className: `w-full h-full object-cover hover:scale-105 transition-all duration-300 ${
-          children.props.className || ""
-        }`,
-      })}
+      {React.isValidElement(children)
+        ? React.cloneElement(children, {
+            className: `w-full h-full object-cover hover:scale-105 transition-all duration-300 ${
+              (children.props && children.props.className) || ""
+            }`,
+          })
+        : children}
     </section>
   )
 }
