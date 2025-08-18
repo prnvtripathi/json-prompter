@@ -1,4 +1,5 @@
 import { ThemeProvider } from "./theme-provider";
+import { Analytics } from "@vercel/analytics/next"
 
 export default function Providers({
     children,
@@ -12,6 +13,7 @@ export default function Providers({
             enableSystem
         >
             {children}
+            <Analytics />
         </ThemeProvider>
     );
 }
